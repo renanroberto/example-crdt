@@ -1,0 +1,20 @@
+<section>
+  <div>
+    <h3>Counter 1</h3>
+    <button phx-click="dec">-</button>
+    <span><%= @state["counter1"] || 0 %></span>
+    <button phx-click="inc" phx-value-counter="counter1">+</button>
+  </div>
+  <div>
+    <h3>Counter 2</h3>
+    <button phx-click="dec">-</button>
+    <span><%= @state["counter2"] || 0 %></span>
+    <button phx-click="inc" phx-value-counter="counter2">+</button>
+  </div>
+  <div>
+    <h3>Counter 3</h3>
+    <button phx-click="dec">-</button>
+    <span><%= @state["counter3"] || 0 %></span>
+    <button phx-click="inc" phx-value-counter="counter3">+</button>
+  </div>
+</section>
