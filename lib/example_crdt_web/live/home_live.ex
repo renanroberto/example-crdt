@@ -16,13 +16,15 @@ defmodule ExampleCRDTWeb.HomeLive do
 
   @impl true
   def handle_event("inc", %{"counter" => counter}, socket) do
-    Counter.incr(:"#{counter}")
+    Counter.inc(:"#{counter}")
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("dec", _value, socket) do
+  def handle_event("dec", %{"counter" => counter}, socket) do
+    Counter.dec(:"#{counter}")
+
     {:noreply, socket}
   end
 

@@ -6,7 +6,7 @@ defmodule ExampleCRDT.Counter do
   def start_link(name: name) do
     state = %{
       name: name,
-      value: %{name => 0},
+      value: %{name => {0, 0}},
       online: true
     }
 
@@ -22,11 +22,16 @@ defmodule ExampleCRDT.Counter do
   defp sum_values(values) do
     values
     |> Map.values()
-    |> Enum.sum()
+    |> Enum.reduce(fn {p, n}, {q, m} -> {p + q, n + m} end)
+    |> then(fn {p, n} -> p - n end)
   end
 
-  def incr(counter) do
-    GenServer.cast(counter, :incr)
+  def inc(counter) do
+    GenServer.cast(counter, :inc)
+  end
+
+  def dec(counter) do
+    GenServer.cast(counter, :dec)
   end
 
   def toggle_online(counter) do
@@ -46,10 +51,19 @@ defmodule ExampleCRDT.Counter do
   end
 
   @impl true
-  def handle_cast(:incr, state = %{name: name}) do
+  def handle_cast(:inc, state = %{name: name}) do
     new_state =
       state
-      |> update_in([:value, name], fn x -> x + 1 end)
+      |> update_in([:value, name], fn {p, n} -> {p + 1, n} end)
+
+    {:noreply, new_state}
+  end
+
+  @impl true
+  def handle_cast(:dec, state = %{name: name}) do
+    new_state =
+      state
+      |> update_in([:value, name], fn {p, n} -> {p, n + 1} end)
 
     {:noreply, new_state}
   end
@@ -75,7 +89,9 @@ defmodule ExampleCRDT.Counter do
   end
 
   defp merge(v, u) do
-    Map.merge(v, u, fn _k, x, y -> max(x, y) end)
+    Map.merge(v, u, fn _k, {p, n}, {q, m} ->
+      {max(p, q), max(n, m)}
+    end)
   end
 
   @impl true
