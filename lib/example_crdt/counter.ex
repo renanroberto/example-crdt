@@ -16,12 +16,13 @@ defmodule ExampleCRDT.Counter do
   def get(counter) do
     counter
     |> GenServer.call(:get)
-    |> Map.values()
-    |> Enum.sum()
+    |> Map.update(:value, 0, &sum_values/1)
   end
 
-  def online?(counter) do
-    GenServer.call(counter, :online)
+  defp sum_values(values) do
+    values
+    |> Map.values()
+    |> Enum.sum()
   end
 
   def incr(counter) do
@@ -41,12 +42,7 @@ defmodule ExampleCRDT.Counter do
 
   @impl true
   def handle_call(:get, _from, state) do
-    {:reply, state.value, state}
-  end
-
-  @impl true
-  def handle_call(:online, _from, state) do
-    {:reply, state.online, state}
+    {:reply, state, state}
   end
 
   @impl true
@@ -59,7 +55,7 @@ defmodule ExampleCRDT.Counter do
   end
 
   @impl true
-  def handle_cast(:incr, state) do
+  def handle_cast(:toggle_online, state) do
     new_state = %{state | online: !state.online}
 
     {:noreply, new_state}
@@ -84,7 +80,7 @@ defmodule ExampleCRDT.Counter do
 
   @impl true
   def handle_info(:synchronizer, state) do
-    send_state(state)
+    if state.online, do: send_state(state)
 
     Process.send_after(self(), :synchronizer, @update_rate)
     {:noreply, state}

@@ -1,20 +1,19 @@
 <section>
+  <%= for counter <- Map.values(@state) do %>
   <div>
-    <h3>Counter 1</h3>
-    <button phx-click="dec">-</button>
-    <span><%= @state["counter1"] || 0 %></span>
-    <button phx-click="inc" phx-value-counter="counter1">+</button>
+    <h3><%= counter.name %></h3>
+    <div>
+      online:
+      <input type="checkbox"
+	     phx-click="toggle_online"
+	     phx-value-counter=<%= counter.name %>
+	     <%= if counter.online, do: 'checked', else: '' %>>
+    </div>
+    <div>
+      <button phx-click="dec" phx-value-counter=<%= counter.name %>>-</button>
+      <span><%= counter.value || 0 %></span>
+      <button phx-click="inc" phx-value-counter=<%= counter.name %>>+</button>
+    </div>
   </div>
-  <div>
-    <h3>Counter 2</h3>
-    <button phx-click="dec">-</button>
-    <span><%= @state["counter2"] || 0 %></span>
-    <button phx-click="inc" phx-value-counter="counter2">+</button>
-  </div>
-  <div>
-    <h3>Counter 3</h3>
-    <button phx-click="dec">-</button>
-    <span><%= @state["counter3"] || 0 %></span>
-    <button phx-click="inc" phx-value-counter="counter3">+</button>
-  </div>
+  <% end %>
 </section>

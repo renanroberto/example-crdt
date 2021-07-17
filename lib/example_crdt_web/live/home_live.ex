@@ -27,6 +27,13 @@ defmodule ExampleCRDTWeb.HomeLive do
   end
 
   @impl true
+  def handle_event("toggle_online", %{"counter" => counter}, socket) do
+    Counter.toggle_online(:"#{counter}")
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info("update", socket) do
     Process.send_after(self(), "update", @update_rate)
 
