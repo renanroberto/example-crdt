@@ -1,7 +1,7 @@
 defmodule ExampleCRDT.Supervisor.Counter do
   use Supervisor
 
-  @number_of_replicas 3
+  @number_of_replicas 6
 
   def start_link(_opts) do
     Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)

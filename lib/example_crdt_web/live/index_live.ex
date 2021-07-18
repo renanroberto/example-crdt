@@ -39,11 +39,13 @@ defmodule ExampleCRDTWeb.IndexLive do
   def handle_info("update", socket) do
     Process.send_after(self(), "update", @update_rate)
 
-    state = %{
-      "counter1" => Counter.get(:counter1),
-      "counter2" => Counter.get(:counter2),
-      "counter3" => Counter.get(:counter3)
-    }
+    state =
+      ExampleCRDT.Supervisor.Counter
+      |> Supervisor.which_children()
+      |> Enum.map(fn {name, _, _, _} -> name end)
+      |> Enum.reduce(%{}, fn counter, state ->
+        Map.put(state, counter, Counter.get(:"#{counter}"))
+      end)
 
     {:noreply, assign(socket, state: state)}
   end
