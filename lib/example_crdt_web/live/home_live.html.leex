@@ -1,15 +1,18 @@
-<section>
+<section class="counter-grid">
   <%= for counter <- Map.values(@state) do %>
-  <div>
-    <h3><%= counter.name %></h3>
-    <div>
-      online:
-      <input type="checkbox"
-	     phx-click="toggle_online"
-	     phx-value-counter=<%= counter.name %>
-	     <%= if counter.online, do: 'checked', else: '' %>>
-    </div>
-    <div>
+  <div class="counter">
+    <header>
+      <h3><%= counter.name %></h3>
+      <div class="checkbox-slider">
+	<input type="checkbox"
+	       id=<%= counter.name %>
+	       phx-click="toggle_online"
+	       phx-value-counter=<%= counter.name %>
+	       <%= if counter.online, do: 'checked', else: '' %>>
+	<label for=<%= counter.name %>></label>
+      </div>
+    </header>
+    <div class="counter-body">
       <button phx-click="dec" phx-value-counter=<%= counter.name %>>-</button>
       <span><%= counter.value || 0 %></span>
       <button phx-click="inc" phx-value-counter=<%= counter.name %>>+</button>
