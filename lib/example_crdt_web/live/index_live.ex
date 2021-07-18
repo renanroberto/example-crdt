@@ -1,4 +1,4 @@
-defmodule ExampleCRDTWeb.HomeLive do
+defmodule ExampleCRDTWeb.IndexLive do
   use ExampleCRDTWeb, :live_view
 
   alias ExampleCRDT.Counter

@@ -17,8 +17,7 @@ defmodule ExampleCRDTWeb.Router do
   scope "/", ExampleCRDTWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
-    live "/home", HomeLive, :index
+    live "/", IndexLive, :index
   end
 
   # Other scopes may use custom stacks.
